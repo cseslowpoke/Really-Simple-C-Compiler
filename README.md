@@ -1,2 +1,2 @@
 # really-simple-c-compiler
-project for friend's course project
+This project was developed specifically for a friend’s course project.
