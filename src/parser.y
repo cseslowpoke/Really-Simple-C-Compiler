@@ -145,7 +145,7 @@ int main(int argv, char **argc) {
         return 0;
     }
     else if (argv == 2) {
-        freopen("a.s", "w", stdout);
+        freopen("a.asm", "w", stdout);
         // 輸出前半段組合語言指令
         printf("section .text\n");
         printf("global main\n");
