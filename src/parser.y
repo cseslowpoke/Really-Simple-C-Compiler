@@ -19,10 +19,10 @@ int semaError = 0;
 
 
 %token LPAREN RPAREN LBRCKT RBRCKT
-%token KW_INT KW_RET KW_MAIN
+%token KW_INT KW_RET KW_MAIN KW_PRINT KW_SCAN
 %left ADD SUB 
 %left MUL DIV 
-%token SEMI COMMA ASSN
+%token SEMI COMMA ASSN 
 %token <identifier> ID
 %token <value> NUMBER
 %type <node> expr
@@ -60,6 +60,12 @@ stmt:
     }
     | KW_RET expr SEMI{
         $$ = ret_ast($2);
+    }
+    | KW_PRINT LPAREN expr RPAREN SEMI{
+        $$ = print_ast($3);
+    }
+    | KW_SCAN LPAREN Varref RPAREN SEMI{
+        $$ = scan_ast($3);
     }
     ;
 
@@ -121,8 +127,10 @@ int main(int argv, char **argc) {
     if (argv == 4 && strcmp(argc[2], "-o") == 0) {
         freopen(argc[3], "w", stdout);
         // 輸出前半段組合語言指令
-        printf(".intel_syntax noprefix\n");
-        printf(".global main\n");
+        printf("section .text\n");
+        printf("global main\n");
+        printf("extern printNumber\n");
+        printf("extern scanNumber\n");
         printf("main:\n");
 
         // 前言
@@ -139,10 +147,11 @@ int main(int argv, char **argc) {
     else if (argv == 2) {
         freopen("a.s", "w", stdout);
         // 輸出前半段組合語言指令
-        printf(".intel_syntax noprefix\n");
-        printf(".global main\n");
+        printf("section .text\n");
+        printf("global main\n");
+        printf("extern printNumber\n");
+        printf("extern scanNumber\n");
         printf("main:\n");
-
         // 前言
         // 預留26個變數的空間
         printf("  push rbp\n");

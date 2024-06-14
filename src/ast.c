@@ -110,6 +110,41 @@ struct ast *ret_ast(struct ast *expr) {
     return node;
 }
 
+struct ast *print_ast(struct ast *expr) {
+    struct ast *node = malloc(sizeof(struct ast));
+    if (!node) {
+        yyerror("out of space");
+        exit(0);
+    }
+    node->type = ast_PRINT;
+    node->children = malloc(sizeof(struct ast *));
+    if (!node->children) {
+        yyerror("out of space");
+        exit(0);
+    }
+    node->children[0] = expr;
+    node->num_children = 1;
+    return node;
+}
+
+struct ast *scan_ast(struct ast *var) {
+    struct ast *node = malloc(sizeof(struct ast));
+    if (!node) {
+        yyerror("out of space");
+        exit(0);
+    }
+    node->type = ast_SCAN;
+    node->children = malloc(sizeof(struct ast *));
+    if (!node->children) {
+        yyerror("out of space");
+        exit(0);
+    }
+    node->children[0] = var;
+    node->num_children = 1;
+    return node;
+}
+
+
 struct ast *program(struct ast **stmts, int len) {
     struct ast *node = malloc(sizeof(struct ast));
     if (!node) {
@@ -121,6 +156,7 @@ struct ast *program(struct ast **stmts, int len) {
     node->num_children = len;
     return node;
 }
+
 
 /* evaluate an AST */
 void dump_ast(struct ast *node)
@@ -148,6 +184,10 @@ void dump_ast(struct ast *node)
             printf("num: %d\n", node->value); break;
         case 9:
             printf("return\n"); break;
+        case 10:
+            printf("print\n"); break;
+        case 11:
+            printf("scan\n"); break;
     }
     // printf("Evaluating node of type %d\n", node->type);
     for (int i = 0; i < node->num_children; i++)
@@ -223,8 +263,25 @@ void gen(struct ast *node) {
             printf("  leave\n");
             printf("  ret\n");
             return;
+        case 10: 
+            // printNumber(int)
+            gen(node->children[0]);
+            printf("  pop rdi\n");
+            printf("  call printNumber\n");
+            return;
+        case 11:
+            // scanNumber(int *)
+            printf("  mov rax, rbp\n");
+            printf("  sub rax, %d\n", (node->children[0]->name[0] - 'a' + 1) * 8);
+            printf("  push rax\n");
+            printf("  pop rdi\n");
+            printf("  call scanNumber\n");
+            return;
     }
 }
+
+
+
 /* delete and free an AST */
 void free_ast(struct ast *node)
 {

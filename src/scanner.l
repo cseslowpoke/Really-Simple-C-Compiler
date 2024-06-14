@@ -13,7 +13,8 @@
 "main"   { return KW_MAIN; }
 "return" { return KW_RET; }
 "int"    { return KW_INT; }
-
+"print"  { return KW_PRINT; }
+"scan"   { return KW_SCAN; }
 "("      { return LPAREN; }
 ")"      { return RPAREN; }
 "{"      { return LBRCKT; }

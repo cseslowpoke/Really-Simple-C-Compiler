@@ -12,7 +12,9 @@ struct ast {
         ast_MUL,
         ast_DIV,
         ast_NUM,
-        ast_RETURN
+        ast_RETURN,
+        ast_PRINT,
+        ast_SCAN
     } type;
     struct ast **children;
     int num_children;
@@ -32,6 +34,10 @@ struct ast *decl_ast(char *name);
 struct ast *assign_ast(struct ast *var,struct ast *expr);
 
 struct ast *ret_ast(struct ast *expr);
+
+struct ast *print_ast(struct ast *expr);
+
+struct ast *scan_ast(struct ast *var);
 
 struct ast *program(struct ast **stmts, int len);
 
