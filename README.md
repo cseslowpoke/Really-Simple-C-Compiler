@@ -1,4 +1,4 @@
-# really-simple-c-compiler
+# Really Simple C Compiler
 
 This project was developed specifically for a friend’s course project. It is a simple C compiler that generates AT&T syntax x86-64 assembly code.
 
